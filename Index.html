@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0b0b">
+<title>KHIT MOTOBIKE MANAGER</title>
+
+<style>
+:root{
+--bg:#0b0b0b;
+--card:#151515;
+--card2:#1d1d1d;
+--gold:#d6ad55;
+--white:#f5f5f5;
+--muted:#929292;
+--green:#35c98b;
+--red:#e05252;
+--border:#303030;
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:var(--bg);
+color:var(--white);
+font-family:Arial,"Noto Sans Myanmar",sans-serif;
+}
+
+.app{
+max-width:1000px;
+margin:auto;
+padding:15px;
+}
+
+header{
+text-align:center;
+padding:22px 5px;
+}
+
+.logo{
+color:var(--gold);
+font-size:25px;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.sub{
+color:var(--muted);
+font-size:10px;
+letter-spacing:3px;
+margin-top:7px;
+}
+
+nav{
+display:flex;
+gap:7px;
+overflow-x:auto;
+margin-bottom:18px;
+padding-bottom:3px;
+}
+
+nav button{
+min-width:105px;
+border:1px solid var(--border);
+background:#1b1b1b;
+color:#ccc;
+padding:12px 8px;
+border-radius:8px;
+font-weight:bold;
+}
+
+nav button.active{
+background:var(--gold);
+color:#000;
+}
+
+.page{
+display:none;
+}
+
+.page.active{
+display:block;
+}
+
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:12px;
+padding:17px;
+margin-bottom:15px;
+}
+
+.title{
+color:var(--gold);
+font-weight:bold;
+font-size:17px;
+margin-bottom:17px;
+}
+
+label{
+display:block;
+color:#bbb;
+font-size:13px;
+margin:12px 0 6px;
+}
+
+input,select{
+width:100%;
+background:#242424;
+border:1px solid #414141;
+color:#fff;
+border-radius:7px;
+padding:13px;
+font-size:15px;
+outline:none;
+}
+
+input:focus,select:focus{
+border-color:var(--gold);
+}
+
+button{
+cursor:pointer;
+}
+
+.main{
+width:100%;
+border:0;
+background:var(--gold);
+color:#000;
+padding:14px;
+border-radius:7px;
+font-weight:bold;
+margin-top:14px;
+}
+
+.secondary{
+background:#292929;
+color:#fff;
+border:1px solid #444;
+padding:11px;
+border-radius:7px;
+}
+
+.result{
+margin-top:15px;
+background:var(--card2);
+padding:13px;
+border-radius:9px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+gap:15px;
+padding:10px 0;
+border-bottom:1px solid #333;
+font-size:13px;
+}
+
+.row:last-child{
+border-bottom:0;
+}
+
+.row strong{
+text-align:right;
+}
+
+.total{
+color:var(--gold);
+font-size:17px;
+}
+
+.sell{
+margin-top:15px;
+background:var(--gold);
+color:#000;
+text-align:center;
+padding:17px;
+border-radius:9px;
+}
+
+.sell small{
+font-weight:bold;
+}
+
+.sell h2{
+margin:8px 0 0;
+font-size:25px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+
+.stat{
+background:var(--card2);
+border:1px solid var(--border);
+padding:15px;
+border-radius:9px;
+}
+
+.stat small{
+color:var(--muted);
+}
+
+.stat strong{
+display:block;
+color:var(--gold);
+font-size:18px;
+margin-top:8px;
+word-break:break-word;
+}
+
+.table-wrap{
+overflow-x:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:700px;
+font-size:12px;
+}
+
+th,td{
+padding:11px 8px;
+border-bottom:1px solid #333;
+text-align:left;
+}
+
+th{
+color:var(--gold);
+}
+
+.badge{
+display:inline-block;
+padding:5px 8px;
+border-radius:5px;
+font-size:10px;
+font-weight:bold;
+}
+
+.stock{
+background:#263d33;
+color:#62d7a2;
+}
+
+.action{
+border:0;
+border-radius:5px;
+padding:7px 9px;
+margin:2px;
+font-size:11px;
+}
+
+.sellBtn{
+background:var(--green);
+color:#000;
+}
+
+.deleteBtn{
+background:var(--red);
+color:#fff;
+}
+
+.muted{
+color:var(--muted);
+font-size:12px;
+line-height:1.6;
+}
+
+.online{
+color:var(--green);
+}
+
+.offline{
+color:var(--red);
+}
+
+.history{
+background:#202020;
+border-radius:7px;
+padding:11px;
+margin-top:8px;
+}
+
+.empty{
+text-align:center;
+color:#666;
+padding:20px;
+}
+
+.profit{
+color:var(--green);
+font-weight:bold;
+}
+
+.loss{
+color:var(--red);
+font-weight:bold;
+}
+
+.rate-box{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.rate-section{
+background:#202020;
+border:1px solid #333;
+border-radius:9px;
+padding:12px;
+}
+
+.rate-title{
+color:var(--gold);
+font-size:12px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.status{
+font-size:11px;
+margin-top:8px;
+}
+
+.model-price{
+color:var(--green);
+font-size:12px;
+margin-top:6px;
+}
+
+footer{
+text-align:center;
+color:#555;
+font-size:10px;
+padding:25px 0 10px;
+}
+
+@media(max-width:600px){
+.app{padding:10px}
+.logo{font-size:21px}
+.grid{grid-template-columns:1fr 1fr}
+.rate-box{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+<div class="logo">KHIT MOTOBIKE SHOP</div>
+<div class="sub">BUSINESS MANAGEMENT SYSTEM</div>
+</header>
+
+<nav>
+<button class="active" onclick="page('dashboard',this)">Dashboard</button>
+<button onclick="page('calculator',this)">Calculator</button>
+<button onclick="page('inventory',this)">Inventory</button>
+<button onclick="page('sales',this)">Sales</button>
+<button onclick="page('rate',this)">Exchange</button>
+<button onclick="page('backup',this)">Backup</button>
+</nav>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboard" class="page active">
+
+<div class="card">
+
+<div class="title">BUSINESS OVERVIEW</div>
+
+<div class="grid">
+
+<div class="stat">
+<small>IN STOCK</small>
+<strong id="stockCount">0</strong>
+</div>
+
+<div class="stat">
+<small>SOLD</small>
+<strong id="soldCount">0</strong>
+</div>
+
+<div class="stat">
+<small>TOTAL REVENUE</small>
+<strong id="revenue">0 MMK</strong>
+</div>
+
+<div class="stat">
+<small>TOTAL PROFIT</small>
+<strong id="profitTotal">0 MMK</strong>
+</div>
+
+</div>
+</div>
+
+
+<div class="card">
+
+<div class="title">TODAY'S RATE</div>
+
+<div class="rate-box">
+
+<div class="rate-section">
+
+<div class="rate-title">
+KBZ BANKING RATE
+</div>
+
+<div class="row">
+<span>ကျပ်ပေး / ဘတ်ယူ</span>
+<strong id="bankBuyRate">Loading...</strong>
+</div>
+
+<div class="row">
+<span>ဘတ်ပေး / ကျပ်ယူ</span>
+<strong id="bankSellRate">Loading...</strong>
+</div>
+
+<div id="bankStatus" class="status muted">
+KBZ Online Rate
+</div>
+
+</div>
+
+
+<div class="rate-section">
+
+<div class="rate-title">
+MYAWADDY RATE
+</div>
+
+<div class="row">
+<span>ကျပ်ပေး / ဘတ်ယူ</span>
+<strong id="myawaddyBuyRate">640</strong>
+</div>
+
+<div class="row">
+<span>ဘတ်ပေး / ကျပ်ယူ</span>
+<strong id="myawaddySellRate">650</strong>
+</div>
+
+<div class="status muted">
+Manual Rate
+</div>
+
+</div>
+
+</div>
+
+<div class="muted" id="rateUpdated">
+Last Updated: Not Set
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= CALCULATOR ================= -->
+
+<section id="calculator" class="page">
+
+<div class="card">
+
+<div class="title">
+MOTORBIKE PRICE CALCULATOR
+</div>
+
+
+<label>
+ဆိုင်ကယ်အမျိုးအစား
+</label>
+
+<select id="bikeModel" onchange="modelChanged()">
+
+<option value="Honda Click 160">
+Honda Click 160
+</option>
+
+<option value="Honda Scoopy">
+Honda Scoopy
+</option>
+
+<option value="Honda ADV 160">
+Honda ADV 160
+</option>
+
+<option value="Honda PCX 160">
+Honda PCX 160
+</option>
+
+<option value="Honda Winner R">
+Honda Winner R
+</option>
+
+<option value="Other">
+Other
+</option>
+
+</select>
+
+
+<label>
+RATE SOURCE
+</label>
+
+<select id="rateSource" onchange="changeRateSource()">
+
+<option value="myawaddy">
+Myawaddy Rate
+</option>
+
+<option value="banking">
+KBZ Banking Rate
+</option>
+
+</select>
+
+
+<label>
+ဆိုင်ကယ်ဝယ်ဈေး (BAHT)
+</label>
+
+<input
+id="bikeBaht"
+type="number"
+placeholder="70000">
+
+<div id="modelPriceHint" class="model-price">
+</div>
+
+
+<label>
+ကျပ်ပေး / ဘတ်ယူ Rate
+</label>
+
+<input
+id="exchange"
+type="number"
+value="640">
+
+
+<label>
+Delivery / Transport Cost (MMK)
+</label>
+
+<input
+id="transport"
+type="number"
+value="1700000">
+
+
+<label>
+လိုချင်သောအမြတ် (MMK)
+</label>
+
+<input
+id="profit"
+type="number"
+value="800000">
+
+
+<button class="main" onclick="calculate()">
+CALCULATE
+</button>
+
+<div id="calcResult"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= INVENTORY ================= -->
+
+<section id="inventory" class="page">
+
+<div class="card">
+
+<div class="title">
+INVENTORY
+</div>
+
+<div class="empty">
+No inventory data yet.
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= SALES ================= -->
+
+<section id="sales" class="page">
+
+<div class="card">
+
+<div class="title">
+SALES
+</div>
+
+<div class="empty">
+No sales data yet.
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= RATE ================= -->
+
+<section id="rate" class="page">
+
+<div class="card">
+
+<div class="title">
+EXCHANGE RATE
+</div>
+
+
+<div class="rate-section">
+
+<div class="rate-title">
+MYAWADDY RATE
+</div>
+
+<label>
+ကျပ်ပေး / ဘတ်ယူ
+</label>
+
+<input
+id="rateBuy"
+type="number"
+value="640">
+
+
+<label>
+ဘတ်ပေး / ကျပ်ယူ
+</label>
+
+<input
+id="rateSell"
+type="number"
+value="650">
+
+
+<button class="main" onclick="saveRate()">
+SAVE MYAWADDY RATE
+</button>
+
+</div>
+
+
+<div class="rate-section" style="margin-top:15px;">
+
+<div class="rate-title">
+KBZ BANKING RATE
+</div>
+
+<div class="row">
+<span>ကျပ်ပေး / ဘတ်ယူ</span>
+<strong id="kbzBuy">Loading...</strong>
+</div>
+
+<div class="row">
+<span>ဘတ်ပေး / ကျပ်ယူ</span>
+<strong id="kbzSell">Loading...</strong>
+</div>
+
+<div id="kbzMessage" class="muted">
+Checking KBZ official website...
+</div>
+
+<button
+class="secondary"
+style="width:100%;margin-top:10px;"
+onclick="loadKBZRate()">
+REFRESH KBZ RATE
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= BACKUP ================= -->
+
+<section id="backup" class="page">
+
+<div class="card">
+
+<div class="title">
+BACKUP
+</div>
+
+<button class="main" onclick="exportData()">
+EXPORT DATA
+</button>
+
+<button
+class="secondary"
+style="width:100%;margin-top:10px;"
+onclick="clearData()">
+CLEAR DATA
+</button>
+
+</div>
+
+</section>
+
+
+<footer>
+KHIT MOTOBIKE SHOP
+</footer>
+
+</div>
+
+
+<script>
+
+/* =========================
+GLOBAL RATE DATA
+========================= */
+
+let bankingRate = {
+buy:0,
+sell:0
+};
+
+let myawaddyRate = {
+buy:640,
+sell:650
+};
+
+
+/* =========================
+MOTORBIKE MODEL DEFAULT PRICES
+========================= */
+
+const modelPrices = {
+
+"Honda Click 160":70000,
+
+"Honda Scoopy":55000,
+
+"Honda ADV 160":85000,
+
+"Honda PCX 160":90000,
+
+"Honda Winner R":70000
+
+};
+
+
+/* =========================
+PAGE NAVIGATION
+========================= */
+
+function page(id,btn){
+
+document
+.querySelectorAll(".page")
+.forEach(function(p){
+
+p.classList.remove("active");
+
+});
+
+document
+.getElementById(id)
+.classList.add("active");
+
+document
+.querySelectorAll("nav button")
+.forEach(function(b){
+
+b.classList.remove("active");
+
+});
+
+btn.classList.add("active");
+
+}
+
+
+/* =========================
+MODEL CHANGE
+========================= */
+
+function modelChanged(){
+
+const model =
+document.getElementById("bikeModel").value;
+
+const price =
+modelPrices[model];
+
+const bikeBaht =
+document.getElementById("bikeBaht");
+
+const hint =
+document.getElementById("modelPriceHint");
+
+
+if(price){
+
+bikeBaht.value = price;
+
+hint.innerText =
+"Default Purchase Price: " +
+formatMoney(price) +
+" THB";
+
+}else{
+
+bikeBaht.value = "";
+
+hint.innerText =
+"ကိုယ်တိုင်ဝယ်ဈေး ထည့်ပါ။";
+
+}
+
+}
+
+
+/* =========================
+RATE SOURCE
+========================= */
+
+function changeRateSource(){
+
+const source =
+document.getElementById("rateSource").value;
+
+const exchange =
+document.getElementById("exchange");
+
+
+if(source === "banking"){
+
+if(bankingRate.buy > 0){
+
+exchange.value =
+bankingRate.buy;
+
+}else{
+
+exchange.value = "";
+
+alert(
+"KBZ Banking Rate မရသေးပါ။ Internet ကိုစစ်ပြီး Refresh KBZ Rate နှိပ်ပါ။"
+);
+
+}
+
+}else{
+
+exchange.value =
+myawaddyRate.buy || "";
+
+}
+
+}
+
+
+/* =========================
+SAVE MYAWADDY RATE
+========================= */
+
+function saveRate(){
+
+const buy =
+Number(
+document.getElementById("rateBuy").value
+);
+
+const sell =
+Number(
+document.getElementById("rateSell").value
+);
+
+
+if(buy <= 0 || sell <= 0){
+
+alert(
+"Myawaddy Rate နှစ်ခုလုံး ထည့်ပါ။"
+);
+
+return;
+
+}
+
+
+myawaddyRate = {
+
+buy:buy,
+sell:sell
+
+};
+
+
+localStorage.setItem(
+"khit_myawaddy_rate",
+JSON.stringify(myawaddyRate)
+);
+
+
+document.getElementById(
+"rateBuy"
+).value = buy;
+
+document.getElementById(
+"rateSell"
+).value = sell;
+
+
+updateRateDisplay();
+
+
+alert(
+"Myawaddy Rate saved successfully."
+);
+
+}
+
+
+/* =========================
+LOAD SAVED RATES
+========================= */
+
+function loadRates(){
+
+const saved =
+localStorage.getItem(
+"khit_myawaddy_rate"
+);
+
+
+if(saved){
+
+try{
+
+myawaddyRate =
+JSON.parse(saved);
+
+document.getElementById(
+"rateBuy"
+).value =
+myawaddyRate.buy;
+
+document.getElementById(
+"rateSell"
+).value =
+myawaddyRate.sell;
+
+}catch(e){
+
+console.log(e);
+
+}
+
+}
+
+
+const savedKBZ =
+localStorage.getItem(
+"khit_kbz_rate"
+);
+
+
+if(savedKBZ){
+
+try{
+
+bankingRate =
+JSON.parse(savedKBZ);
+
+}catch(e){
+
+console.log(e);
+
+}
+
+}
+
+
+updateRateDisplay();
+
+}
+
+
+/* =========================
+UPDATE RATE DISPLAY
+========================= */
+
+function updateRateDisplay(){
+
+document.getElementById(
+"myawaddyBuyRate"
+).innerText =
+myawaddyRate.buy || "Not Set";
+
+
+document.getElementById(
+"myawaddySellRate"
+).innerText =
+myawaddyRate.sell || "Not Set";
+
+
+document.getElementById(
+"bankBuyRate"
+).innerText =
+bankingRate.buy
+? bankingRate.buy
+: "Not Set";
+
+
+document.getElementById(
+"bankSellRate"
+).innerText =
+bankingRate.sell
+? bankingRate.sell
+: "Not Set";
+
+
+document.getElementById(
+"kbzBuy"
+).innerText =
+bankingRate.buy
+? bankingRate.buy
+: "Not Set";
+
+
+document.getElementById(
+"kbzSell"
+).innerText =
+bankingRate.sell
+? bankingRate.sell
+: "Not Set";
+
+}
+
+
+/* =========================
+CALCULATOR
+========================= */
+
+function calculate(){
+
+const bikeModel =
+document.getElementById(
+"bikeModel"
+).value;
+
+
+const baht =
+Number(
+document.getElementById(
+"bikeBaht"
+).value
+);
+
+
+const rate =
+Number(
+document.getElementById(
+"exchange"
+).value
+);
+
+
+const transport =
+Number(
+document.getElementById(
+"transport"
+).value
+);
+
+
+const profit =
+Number(
+document.getElementById(
+"profit"
+).value
+);
+
+
+if(!bikeModel){
+
+alert(
+"ဆိုင်ကယ်အမျိုးအစား ရွေးပါ။"
+);
+
+return;
+
+}
+
+
+if(baht <= 0){
+
+alert(
+"ဆိုင်ကယ်ဝယ်ဈေး ထည့်ပါ။"
+);
+
+return;
+
+}
+
+
+if(rate <= 0){
+
+alert(
+"Exchange Rate ထည့်ပါ။"
+);
+
+return;
+
+}
+
+
+if(transport < 0){
+
+alert(
+"Transport Cost မှန်ကန်စွာ ထည့်ပါ။"
+);
+
+return;
+
+}
+
+
+if(profit < 0){
+
+alert(
+"Profit မှန်ကန်စွာ ထည့်ပါ။"
+);
+
+return;
+
+}
+
+
+/*
+BAHT TO MMK
+
+Example:
+
+70,000 ÷ 640 × 100,000
+*/
+
+const bikeMMK =
+baht /
+rate *
+100000;
+
+
+const totalCost =
+bikeMMK +
+transport;
+
+
+const sellingPrice =
+totalCost +
+profit;
+
+
+document.getElementById(
+"calcResult"
+).innerHTML = `
+
+<div class="result">
+
+<div class="row">
+<span>Motorbike Model</span>
+<strong>
+${bikeModel}
+</strong>
+</div>
+
+<div class="row">
+<span>Purchase Price</span>
+<strong>
+${formatMoney(baht)} THB
+</strong>
+</div>
+
+<div class="row">
+<span>Exchange Rate</span>
+<strong>
+${formatMoney(rate)}
+</strong>
+</div>
+
+<div class="row">
+<span>Bike Price</span>
+<strong>
+${formatMoney(bikeMMK)} MMK
+</strong>
+</div>
+
+<div class="row">
+<span>Transport</span>
+<strong>
+${formatMoney(transport)} MMK
+</strong>
+</div>
+
+<div class="row">
+<span>Total Cost</span>
+<strong class="total">
+${formatMoney(totalCost)} MMK
+</strong>
+</div>
+
+<div class="row">
+<span>Profit</span>
+<strong class="profit">
+${formatMoney(profit)} MMK
+</strong>
+</div>
+
+</div>
+
+<div class="sell">
+
+<small>
+RECOMMENDED SELLING PRICE
+</small>
+
+<h2>
+${formatMoney(sellingPrice)} MMK
+</h2>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================
+FORMAT MONEY
+========================= */
+
+function formatMoney(number){
+
+return Math.round(number)
+.toLocaleString("en-US");
+
+}
+
+
+/* =========================
+KBZ ONLINE RATE
+========================= */
+
+async function loadKBZRate(){
+
+const status =
+document.getElementById(
+"bankStatus"
+);
+
+
+const message =
+document.getElementById(
+"kbzMessage"
+);
+
+
+status.innerText =
+"KBZ Online Rate Checking...";
+
+
+status.className =
+"status muted";
+
+
+message.innerText =
+"KBZ official website ကိုစစ်နေပါတယ်...";
+
+
+try{
+
+const response =
+await fetch(
+"https://www.kbzbank.com/mm/",
+{
+method:"GET",
+cache:"no-store"
+}
+);
+
+
+if(!response.ok){
+
+throw new Error(
+"HTTP " + response.status
+);
+
+}
+
+
+const html =
+await response.text();
+
+
+const thbIndex =
+html.indexOf("THB");
+
+
+if(thbIndex === -1){
+
+throw new Error(
+"THB rate not found"
+);
+
+}
+
+
+const nearby =
+html.substring(
+Math.max(
+0,
+thbIndex - 1000
+),
+Math.min(
+html.length,
+thbIndex + 1500
+)
+);
+
+
+const numbers =
+nearby.match(
+/\d{1,5}(?:,\d{3})?(?:\.\d+)?/g
+);
+
+
+if(
+!numbers ||
+numbers.length < 2
+){
+
+throw new Error(
+"THB Buy/Sell not detected"
+);
+
+}
+
+
+let values =
+numbers
+.map(function(n){
+
+return Number(
+n.replace(/,/g,"")
+);
+
+})
+.filter(function(n){
+
+return n > 0;
+
+});
+
+
+if(values.length < 2){
+
+throw new Error(
+"Invalid THB rate"
+);
+
+}
+
+
+let buy = 0;
+let sell = 0;
+
+
+for(
+let i=0;
+i<values.length-1;
+i++
+){
+
+const a =
+values[i];
+
+const b =
+values[i+1];
+
+
+if(
+a > 50 &&
+a < 1000 &&
+b > 50 &&
+b < 1000 &&
+b >= a
+){
+
+buy = a;
+sell = b;
+
+}
+
+}
+
+
+if(
+buy <= 0 ||
+sell <= 0
+){
+
+throw new Error(
+"THB Buy/Sell rate invalid"
+);
+
+}
+
+
+bankingRate = {
+
+buy:buy,
+sell:sell
+
+};
+
+
+localStorage.setItem(
+"khit_kbz_rate",
+JSON.stringify(
+bankingRate
+)
+);
+
+
+updateRateDisplay();
+
+
+status.innerText =
+"KBZ Online ✓";
+
+
+status.className =
+"status online";
+
+
+message.innerText =
+"KBZ THB rate updated successfully.";
+
+
+document.getElementById(
+"rateUpdated"
+).innerText =
+"Last Updated: " +
+new Date().toLocaleString();
+
+
+}catch(error){
+
+console.log(
+"KBZ ONLINE RATE ERROR:",
+error
+);
+
+
+const saved =
+localStorage.getItem(
+"khit_kbz_rate"
+);
+
+
+if(saved){
+
+try{
+
+bankingRate =
+JSON.parse(saved);
+
+
+updateRateDisplay();
+
+
+status.innerText =
+"KBZ Saved Rate";
+
+
+status.className =
+"status muted";
+
+
+message.innerText =
+"Online rate မရပါ။ နောက်ဆုံးသိမ်းထားသော KBZ rate ကိုပြနေပါတယ်။";
+
+
+}catch(e){
+
+status.innerText =
+"Offline";
+
+
+status.className =
+"status offline";
+
+
+message.innerText =
+"KBZ online rate မရပါ။";
+
+}
+
+}else{
+
+status.innerText =
+"Offline";
+
+
+status.className =
+"status offline";
+
+
+message.innerText =
+"KBZ online rate မရပါ။ Internet/CORS ကိုစစ်ပါ။";
+
+}
+
+}
+
+}
+
+
+/* =========================
+EXPORT DATA
+========================= */
+
+function exportData(){
+
+const data = {
+
+myawaddyRate:
+myawaddyRate,
+
+bankingRate:
+bankingRate,
+
+modelPrices:
+modelPrices,
+
+date:
+new Date().toISOString()
+
+};
+
+
+const blob =
+new Blob(
+[
+JSON.stringify(
+data,
+null,
+2
+)
+],
+{
+type:"application/json"
+}
+);
+
+
+const url =
+URL.createObjectURL(blob);
+
+
+const a =
+document.createElement("a");
+
+
+a.href = url;
+
+
+a.download =
+"khit-motobike-backup.json";
+
+
+a.click();
+
+
+URL.revokeObjectURL(url);
+
+}
+
+
+/* =========================
+CLEAR DATA
+========================= */
+
+function clearData(){
+
+if(
+confirm(
+"သိမ်းထားသော Rate data အားလုံးကို ဖျက်မလား?"
+)
+){
+
+localStorage.removeItem(
+"khit_myawaddy_rate"
+);
+
+
+localStorage.removeItem(
+"khit_kbz_rate"
+);
+
+
+myawaddyRate = {
+
+buy:640,
+sell:650
+
+};
+
+
+bankingRate = {
+
+buy:0,
+sell:0
+
+};
+
+
+loadRates();
+
+
+updateRateDisplay();
+
+
+alert(
+"Data cleared."
+);
+
+}
+
+}
+
+
+/* =========================
+START APP
+========================= */
+
+window.addEventListener(
+"load",
+function(){
+
+loadRates();
+
+updateRateDisplay();
+
+modelChanged();
+
+loadKBZRate();
+
+}
+);
+
+</script>
+
+</body>
+</html>
+```
