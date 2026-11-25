@@ -514,7 +514,8 @@ Other
 </option>
 
 </select>
-
+  
+<input id="customBikeModel" type="text" style="display:none;margin-top:10px;"
 
 <label>
 RATE SOURCE
@@ -838,6 +839,37 @@ document.getElementById("bikeBaht");
 const hint =
 document.getElementById("modelPriceHint");
 
+const customModel =
+document.getElementById("customBikeModel");
+
+
+/* =========================
+OTHER MODEL
+========================= */
+
+if(model === "Other"){
+
+customModel.style.display = "block";
+
+bikeBaht.value = "";
+
+hint.innerText =
+"ဆိုင်ကယ်အမျိုးအစားနှင့် ဝယ်ဈေးကို ကိုယ်တိုင်ထည့်ပါ။";
+
+return;
+
+}
+
+
+/* =========================
+DEFAULT MODEL
+========================= */
+
+customModel.style.display = "none";
+
+customModel.value = "";
+
+
 if(price){
 
 bikeBaht.value = price;
@@ -857,7 +889,6 @@ hint.innerText =
 }
 
 }
-
 
 /* =========================
 RATE SOURCE
@@ -1067,10 +1098,7 @@ CALCULATOR
 
 function calculate(){
 
-const bikeModel =
-document.getElementById(
-"bikeModel"
-).value;
+let bikeModel = document.getElementById( "bikeModel" ).value; CUSTOM MODEL NAME if(bikeModel ==="Other"){ bikeModel = document.getElementById( "customBikeModel" ).value.trim(); if(!bikeModel){ alert( return; }
 
 const baht =
 Number(
