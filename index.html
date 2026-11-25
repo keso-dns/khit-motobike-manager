@@ -251,8 +251,8 @@ color:#62d7a2;
 }
 
 .sold{
-background:#3d2929;
-color:#ff8585;
+background:#3d3026;
+color:#e8b86a;
 }
 
 .action{
@@ -339,6 +339,10 @@ margin-top:8px;
 color:var(--green);
 font-size:12px;
 margin-top:6px;
+}
+
+.custom-model-box{
+display:none;
 }
 
 footer{
@@ -509,13 +513,30 @@ Honda PCX 160
 Honda Winner R
 </option>
 
-<option value="Other">
-Other
+<option value="custom">
+ကိုယ်တိုင်ရိုက်ထည့်မည်
 </option>
 
 </select>
-  
-<input id="customBikeModel" type="text" style="display:none;margin-top:10px;"
+
+
+<div
+id="customModelBox"
+class="custom-model-box"
+>
+
+<label>
+ကိုယ်တိုင်ရိုက်ထည့်မည့် ဆိုင်ကယ်အမည်
+</label>
+
+<input
+id="customBikeModel"
+type="text"
+placeholder="ဥပမာ - Honda Click 125i 2026"
+>
+
+</div>
+
 
 <label>
 RATE SOURCE
@@ -530,6 +551,7 @@ Myawaddy Rate
 <option value="banking">
 KBZ Banking Rate
 </option>
+
 </select>
 
 
@@ -540,7 +562,8 @@ KBZ Banking Rate
 <input
 id="bikeBaht"
 type="number"
-placeholder="70000">
+placeholder="70000"
+>
 
 <div id="modelPriceHint" class="model-price">
 </div>
@@ -553,7 +576,8 @@ placeholder="70000">
 <input
 id="exchange"
 type="number"
-value="640">
+value="640"
+>
 
 
 <label>
@@ -563,7 +587,8 @@ Delivery / Transport Cost (MMK)
 <input
 id="transport"
 type="number"
-value="1700000">
+value="1700000"
+>
 
 
 <label>
@@ -573,7 +598,8 @@ value="1700000">
 <input
 id="profit"
 type="number"
-value="800000">
+value="800000"
+>
 
 
 <button class="main" onclick="calculate()">
@@ -597,7 +623,7 @@ CALCULATE
 INVENTORY
 </div>
 
-<div id="inventoryList">
+<div id="inventoryContent">
 
 <div class="empty">
 No inventory data yet.
@@ -620,7 +646,7 @@ No inventory data yet.
 SALES
 </div>
 
-<div id="salesList">
+<div id="salesContent">
 
 <div class="empty">
 No sales data yet.
@@ -657,7 +683,8 @@ MYAWADDY RATE
 <input
 id="rateBuy"
 type="number"
-value="640">
+value="640"
+>
 
 
 <label>
@@ -667,7 +694,8 @@ value="640">
 <input
 id="rateSell"
 type="number"
-value="650">
+value="650"
+>
 
 
 <button class="main" onclick="saveRate()">
@@ -677,7 +705,10 @@ SAVE MYAWADDY RATE
 </div>
 
 
-<div class="rate-section" style="margin-top:15px;">
+<div
+class="rate-section"
+style="margin-top:15px;"
+>
 
 <div class="rate-title">
 KBZ BANKING RATE
@@ -700,7 +731,8 @@ Checking KBZ official website...
 <button
 class="secondary"
 style="width:100%;margin-top:10px;"
-onclick="loadKBZRate()">
+onclick="loadKBZRate()"
+>
 REFRESH KBZ RATE
 </button>
 
@@ -728,7 +760,8 @@ EXPORT DATA
 <button
 class="secondary"
 style="width:100%;margin-top:10px;"
-onclick="clearData()">
+onclick="clearData()"
+>
 CLEAR DATA
 </button>
 
@@ -747,7 +780,7 @@ KHIT MOTOBIKE SHOP
 <script>
 
 /* =========================
-GLOBAL DATA
+GLOBAL RATE DATA
 ========================= */
 
 let bankingRate = {
@@ -759,12 +792,6 @@ let myawaddyRate = {
 buy:640,
 sell:650
 };
-
-let inventory = [];
-
-let sales = [];
-
-let lastCalculation = null;
 
 
 /* =========================
@@ -784,6 +811,15 @@ const modelPrices = {
 "Honda Winner R":70000
 
 };
+
+
+/* =========================
+INVENTORY DATA
+========================= */
+
+let inventory = [];
+
+let sales = [];
 
 
 /* =========================
@@ -814,10 +850,6 @@ b.classList.remove("active");
 
 btn.classList.add("active");
 
-renderInventory();
-renderSales();
-updateDashboard();
-
 }
 
 
@@ -830,44 +862,41 @@ function modelChanged(){
 const model =
 document.getElementById("bikeModel").value;
 
-const price =
-modelPrices[model];
-
 const bikeBaht =
 document.getElementById("bikeBaht");
 
 const hint =
 document.getElementById("modelPriceHint");
 
-const customModel =
+const customBox =
+document.getElementById("customModelBox");
+
+const customInput =
 document.getElementById("customBikeModel");
 
 
-/* =========================
-OTHER MODEL
-========================= */
+if(model === "custom"){
 
-if(model === "Other"){
-
-customModel.style.display = "block";
+customBox.style.display = "block";
 
 bikeBaht.value = "";
 
 hint.innerText =
-"ဆိုင်ကယ်အမျိုးအစားနှင့် ဝယ်ဈေးကို ကိုယ်တိုင်ထည့်ပါ။";
+"ကိုယ်တိုင်ဆိုင်ကယ်အမည်နှင့် ဝယ်ဈေးထည့်ပါ။";
+
+customInput.focus();
 
 return;
 
 }
 
 
-/* =========================
-DEFAULT MODEL
-========================= */
+customBox.style.display = "none";
 
-customModel.style.display = "none";
+customInput.value = "";
 
-customModel.value = "";
+const price =
+modelPrices[model];
 
 
 if(price){
@@ -890,6 +919,45 @@ hint.innerText =
 
 }
 
+
+/* =========================
+GET SELECTED MODEL NAME
+========================= */
+
+function getBikeModel(){
+
+const selected =
+document.getElementById("bikeModel").value;
+
+
+if(selected === "custom"){
+
+const custom =
+document.getElementById("customBikeModel")
+.value
+.trim();
+
+
+if(!custom){
+
+alert(
+"ဆိုင်ကယ်အမျိုးအစားကို ကိုယ်တိုင်ရိုက်ထည့်ပါ။"
+);
+
+return null;
+
+}
+
+return custom;
+
+}
+
+
+return selected;
+
+}
+
+
 /* =========================
 RATE SOURCE
 ========================= */
@@ -901,6 +969,7 @@ document.getElementById("rateSource").value;
 
 const exchange =
 document.getElementById("exchange");
+
 
 if(source === "banking"){
 
@@ -945,6 +1014,7 @@ Number(
 document.getElementById("rateSell").value
 );
 
+
 if(buy <= 0 || sell <= 0){
 
 alert(
@@ -955,6 +1025,7 @@ return;
 
 }
 
+
 myawaddyRate = {
 
 buy:buy,
@@ -962,20 +1033,15 @@ sell:sell
 
 };
 
+
 localStorage.setItem(
 "khit_myawaddy_rate",
 JSON.stringify(myawaddyRate)
 );
 
-document.getElementById(
-"rateBuy"
-).value = buy;
-
-document.getElementById(
-"rateSell"
-).value = sell;
 
 updateRateDisplay();
+
 
 alert(
 "Myawaddy Rate saved successfully."
@@ -994,6 +1060,7 @@ const saved =
 localStorage.getItem(
 "khit_myawaddy_rate"
 );
+
 
 if(saved){
 
@@ -1020,10 +1087,12 @@ console.log(e);
 
 }
 
+
 const savedKBZ =
 localStorage.getItem(
 "khit_kbz_rate"
 );
+
 
 if(savedKBZ){
 
@@ -1039,6 +1108,7 @@ console.log(e);
 }
 
 }
+
 
 updateRateDisplay();
 
@@ -1056,10 +1126,12 @@ document.getElementById(
 ).innerText =
 myawaddyRate.buy || "Not Set";
 
+
 document.getElementById(
 "myawaddySellRate"
 ).innerText =
 myawaddyRate.sell || "Not Set";
+
 
 document.getElementById(
 "bankBuyRate"
@@ -1068,6 +1140,7 @@ bankingRate.buy
 ? bankingRate.buy
 : "Not Set";
 
+
 document.getElementById(
 "bankSellRate"
 ).innerText =
@@ -1075,12 +1148,14 @@ bankingRate.sell
 ? bankingRate.sell
 : "Not Set";
 
+
 document.getElementById(
 "kbzBuy"
 ).innerText =
-bankingRate.buy
+  bankingRate.buy
 ? bankingRate.buy
 : "Not Set";
+
 
 document.getElementById(
 "kbzSell"
@@ -1098,7 +1173,16 @@ CALCULATOR
 
 function calculate(){
 
-let bikeModel = document.getElementById( "bikeModel" ).value; CUSTOM MODEL NAME if(bikeModel ==="Other"){ bikeModel = document.getElementById( "customBikeModel" ).value.trim(); if(!bikeModel){ alert( return; }
+const bikeModel =
+getBikeModel();
+
+
+if(!bikeModel){
+
+return;
+
+}
+
 
 const baht =
 Number(
@@ -1107,12 +1191,14 @@ document.getElementById(
 ).value
 );
 
+
 const rate =
 Number(
 document.getElementById(
 "exchange"
 ).value
 );
+
 
 const transport =
 Number(
@@ -1121,6 +1207,7 @@ document.getElementById(
 ).value
 );
 
+
 const profit =
 Number(
 document.getElementById(
@@ -1128,20 +1215,6 @@ document.getElementById(
 ).value
 );
 
-const rateSource =
-document.getElementById(
-"rateSource"
-).value;
-
-if(!bikeModel){
-
-alert(
-"ဆိုင်ကယ်အမျိုးအစား ရွေးပါ။"
-);
-
-return;
-
-}
 
 if(baht <= 0){
 
@@ -1153,6 +1226,7 @@ return;
 
 }
 
+
 if(rate <= 0){
 
 alert(
@@ -1162,6 +1236,7 @@ alert(
 return;
 
 }
+
 
 if(transport < 0){
 
@@ -1173,10 +1248,11 @@ return;
 
 }
 
+
 if(profit < 0){
 
 alert(
-  "Profit မှန်ကန်စွာ ထည့်ပါ။"
+"Profit မှန်ကန်စွာ ထည့်ပါ။"
 );
 
 return;
@@ -1187,9 +1263,12 @@ return;
 /*
 BAHT TO MMK
 
-Example:
+70,000 THB
+640 RATE
+= 10,937,500 MMK
 
-70,000 / 640 * 100,000
+Formula:
+THB / RATE * 100000
 */
 
 const bikeMMK =
@@ -1197,38 +1276,15 @@ baht /
 rate *
 100000;
 
+
 const totalCost =
 bikeMMK +
 transport;
 
+
 const sellingPrice =
 totalCost +
 profit;
-
-
-/* SAVE LAST CALCULATION */
-
-lastCalculation = {
-
-model:bikeModel,
-
-baht:baht,
-
-rate:rate,
-
-rateSource:rateSource,
-
-bikeMMK:bikeMMK,
-
-transport:transport,
-
-totalCost:totalCost,
-
-profit:profit,
-
-sellingPrice:sellingPrice
-
-};
 
 
 document.getElementById(
@@ -1240,7 +1296,7 @@ document.getElementById(
 <div class="row">
 <span>Motorbike Model</span>
 <strong>
-${bikeModel}
+${escapeHTML(bikeModel)}
 </strong>
 </div>
 
@@ -1298,13 +1354,15 @@ RECOMMENDED SELLING PRICE
 ${formatMoney(sellingPrice)} MMK
 </h2>
 
-</div>
-
 <button
-class="main"
-onclick="saveToInventory()">
+class="secondary"
+style="width:100%;margin-top:10px;background:#000;color:#fff;border-color:#000;"
+onclick="saveToInventory()"
+>
 SAVE TO INVENTORY
 </button>
+
+</div>
 
 `;
 
@@ -1312,141 +1370,177 @@ SAVE TO INVENTORY
 
 
 /* =========================
-FORMAT MONEY
-========================= */
-
-function formatMoney(number){
-
-return Math.round(number)
-.toLocaleString("en-US");
-
-}
-
-
-/* =========================
-SAVE INVENTORY DATA
-========================= */
-
-function saveBusinessData(){
-
-localStorage.setItem(
-"khit_inventory",
-JSON.stringify(inventory)
-);
-
-localStorage.setItem(
-"khit_sales",
-JSON.stringify(sales)
-);
-
-}
-
-
-/* =========================
-LOAD INVENTORY DATA
-========================= */
-
-function loadBusinessData(){
-
-try{
-
-const savedInventory =
-localStorage.getItem(
-"khit_inventory"
-);
-
-const savedSales =
-localStorage.getItem(
-"khit_sales"
-);
-
-inventory =
-savedInventory
-? JSON.parse(savedInventory)
-: [];
-
-sales =
-savedSales
-? JSON.parse(savedSales)
-: [];
-
-if(!Array.isArray(inventory)){
-inventory=[];
-}
-
-if(!Array.isArray(sales)){
-sales=[];
-}
-
-}catch(error){
-
-console.log(error);
-
-inventory=[];
-sales=[];
-
-}
-
-}
-
-
-/* =========================
-SAVE TO INVENTORY
+SAVE CALCULATION TO INVENTORY
 ========================= */
 
 function saveToInventory(){
 
-if(!lastCalculation){
+const bikeModel =
+getBikeModel();
+
+
+if(!bikeModel){
+
+return;
+
+}
+
+
+const baht =
+Number(
+document.getElementById("bikeBaht").value
+);
+
+
+const rate =
+Number(
+document.getElementById("exchange").value
+);
+
+
+const transport =
+Number(
+document.getElementById("transport").value
+);
+
+
+const profit =
+Number(
+document.getElementById("profit").value
+);
+
+
+if(
+!bikeModel ||
+baht <= 0 ||
+rate <= 0
+){
 
 alert(
-"အရင်ဆုံး Calculate လုပ်ပါ။"
+"Calculator data မပြည့်စုံပါ။"
 );
 
 return;
 
 }
 
-const item = {
+
+const bikeMMK =
+baht /
+rate *
+100000;
+
+
+const totalCost =
+bikeMMK +
+transport;
+
+
+const sellingPrice =
+totalCost +
+profit;
+
+
+inventory.push({
 
 id:Date.now(),
 
-model:lastCalculation.model,
+model:bikeModel,
 
-baht:lastCalculation.baht,
+baht:baht,
 
-rate:lastCalculation.rate,
+rate:rate,
 
-rateSource:lastCalculation.rateSource,
+bikeMMK:bikeMMK,
 
-bikeMMK:lastCalculation.bikeMMK,
+transport:transport,
 
-transport:lastCalculation.transport,
+totalCost:totalCost,
 
-totalCost:lastCalculation.totalCost,
+profit:profit,
 
-profit:lastCalculation.profit,
-
-sellingPrice:lastCalculation.sellingPrice,
+sellingPrice:sellingPrice,
 
 status:"IN STOCK",
 
-createdAt:new Date().toISOString()
+date:new Date().toLocaleString()
 
-};
+});
 
-inventory.push(item);
 
-saveBusinessData();
+saveInventory();
 
 renderInventory();
 
 updateDashboard();
 
 alert(
-"Motorbike Inventory ထဲသိမ်းပြီးပါပြီ။"
+"Inventory ထဲသို့ သိမ်းပြီးပါပြီ။"
 );
 
-lastCalculation = null;
+}
+
+
+/* =========================
+SAVE INVENTORY
+========================= */
+
+function saveInventory(){
+
+localStorage.setItem(
+"khit_inventory",
+JSON.stringify(inventory)
+);
+
+}
+
+
+/* =========================
+LOAD INVENTORY
+========================= */
+
+function loadInventory(){
+
+const saved =
+localStorage.getItem(
+"khit_inventory"
+);
+
+if(saved){
+
+try{
+
+inventory =
+JSON.parse(saved);
+
+}catch(e){
+
+inventory = [];
+
+}
+
+}
+
+
+const savedSales =
+localStorage.getItem(
+"khit_sales"
+);
+
+if(savedSales){
+
+try{
+
+sales =
+JSON.parse(savedSales);
+
+}catch(e){
+
+sales = [];
+
+}
+
+}
 
 }
 
@@ -1457,18 +1551,15 @@ RENDER INVENTORY
 
 function renderInventory(){
 
-const box =
+const container =
 document.getElementById(
-"inventoryList"
+"inventoryContent"
 );
 
-if(!box){
-return;
-}
 
 if(inventory.length === 0){
 
-box.innerHTML = `
+container.innerHTML = `
 <div class="empty">
 No inventory data yet.
 </div>
@@ -1478,99 +1569,8 @@ return;
 
 }
 
-let rows =
-inventory
-.slice()
-.reverse()
-.map(function(item){
 
-let status =
-item.status || "IN STOCK";
-
-let action = "";
-
-if(status === "IN STOCK"){
-
-action = `
-
-<button
-class="action sellBtn"
-onclick="markSold(${item.id})">
-
-SOLD
-
-</button>
-
-`;
-
-}else{
-
-action = `
-
-<span class="badge sold">
-SOLD
-</span>
-
-`;
-
-}
-
-return `
-
-<tr>
-
-<td>
-${item.model}
-</td>
-
-<td>
-${formatMoney(item.baht)} THB
-</td>
-
-<td>
-${formatMoney(item.totalCost)} MMK
-</td>
-
-<td>
-${formatMoney(item.sellingPrice)} MMK
-</td>
-
-<td>
-
-<span class="badge ${
-status === "SOLD"
-? "sold"
-: "stock"
-}">
-
-${status}
-
-</span>
-
-</td>
-
-<td>
-
-${action}
-
-<button
-class="action deleteBtn"
-onclick="deleteInventory(${item.id})">
-
-DELETE
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-})
-.join("");
-
-box.innerHTML = `
+let html = `
 
 <div class="table-wrap">
 
@@ -1592,8 +1592,85 @@ box.innerHTML = `
 </thead>
 
 <tbody>
+`;
 
-${rows}
+
+inventory.forEach(function(item){
+
+const statusClass =
+item.status === "SOLD"
+? "sold"
+: "stock";
+
+
+html += `
+
+<tr>
+
+<td>
+
+<strong>
+${escapeHTML(item.model)}
+</strong>
+
+<div class="muted">
+${item.date}
+</div>
+
+</td>
+
+<td>
+${formatMoney(item.baht)} THB
+</td>
+
+<td>
+${formatMoney(item.totalCost)} MMK
+</td>
+
+<td>
+${formatMoney(item.sellingPrice)} MMK
+</td>
+
+<td>
+
+<span class="badge ${statusClass}">
+${item.status}
+</span>
+
+</td>
+
+<td>
+
+${
+item.status === "IN STOCK"
+?
+`<button
+class="action sellBtn"
+onclick="sellBike(${item.id})"
+>
+SOLD
+</button>`
+:
+""
+}
+
+<button
+class="action deleteBtn"
+onclick="deleteInventory(${item.id})"
+>
+DELETE
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+html += `
 
 </tbody>
 
@@ -1603,14 +1680,16 @@ ${rows}
 
 `;
 
+container.innerHTML = html;
+
 }
 
 
 /* =========================
-MARK SOLD
+SELL BIKE
 ========================= */
 
-function markSold(id){
+function sellBike(id){
 
 const item =
 inventory.find(function(x){
@@ -1619,102 +1698,87 @@ return x.id === id;
 
 });
 
+
 if(!item){
 
 return;
 
 }
 
-if(item.status !== "IN STOCK"){
 
-return;
-
-}
-
-const input =
+const sellPrice =
 prompt(
-"တကယ်ရောင်းသောဈေး (MMK) ထည့်ပါ။",
-String(
-Math.round(
+"ရောင်းဈေး (MMK) ထည့်ပါ။",
 item.sellingPrice
-)
-)
 );
 
-if(input === null){
+
+if(sellPrice === null){
 
 return;
 
 }
 
-const actualPrice =
-Number(
-input.replace(/,/g,"").trim()
-);
 
-if(
-!Number.isFinite(actualPrice) ||
-actualPrice <= 0
-){
+const revenue =
+Number(sellPrice);
+
+
+if(revenue <= 0){
 
 alert(
-"ရောင်းဈေး မှန်ကန်စွာထည့်ပါ။"
+"ရောင်းဈေး မှန်ကန်စွာ ထည့်ပါ။"
 );
 
 return;
 
 }
 
+
 const actualProfit =
-actualPrice -
+revenue -
 item.totalCost;
 
-item.status =
-"SOLD";
 
-item.actualSellingPrice =
-actualPrice;
+item.status = "SOLD";
 
-item.actualProfit =
-actualProfit;
+item.soldPrice = revenue;
 
-item.soldAt =
-new Date().toISOString();
+item.actualProfit = actualProfit;
+
+item.soldDate =
+new Date().toLocaleString();
 
 
 sales.push({
 
-id:item.id,
+id:Date.now(),
 
 model:item.model,
 
+sellPrice:revenue,
+
 totalCost:item.totalCost,
 
-recommendedSellingPrice:
-item.sellingPrice,
+profit:actualProfit,
 
-actualSellingPrice:
-actualPrice,
-
-actualProfit:
-actualProfit,
-
-soldAt:item.soldAt
+date:item.soldDate
 
 });
 
 
-saveBusinessData();
+localStorage.setItem(
+"khit_sales",
+JSON.stringify(sales)
+);
+
+saveInventory();
 
 renderInventory();
 
 renderSales();
 
 updateDashboard();
-
-alert(
-"Sale recorded successfully."
-);
 
 }
 
@@ -1727,13 +1791,14 @@ function deleteInventory(id){
 
 if(
 !confirm(
-"ဒီဆိုင်ကယ်ကို Inventory မှ ဖျက်မှာ သေချာပါသလား?"
+"ဒီ Inventory item ကို ဖျက်မှာသေချာပါသလား?"
 )
 ){
 
 return;
 
 }
+
 
 inventory =
 inventory.filter(function(item){
@@ -1742,7 +1807,8 @@ return item.id !== id;
 
 });
 
-saveBusinessData();
+
+saveInventory();
 
 renderInventory();
 
@@ -1757,18 +1823,15 @@ RENDER SALES
 
 function renderSales(){
 
-const box =
+const container =
 document.getElementById(
-"salesList"
+"salesContent"
 );
 
-if(!box){
-return;
-}
 
 if(sales.length === 0){
 
-box.innerHTML = `
+container.innerHTML = `
 <div class="empty">
 No sales data yet.
 </div>
@@ -1778,58 +1841,8 @@ return;
 
 }
 
-let rows =
-sales
-.slice()
-.reverse()
-.map(function(item){
 
-return `
-
-<tr>
-
-<td>
-${item.model}
-</td>
-
-<td>
-${new Date(
-item.soldAt
-).toLocaleDateString()}
-</td>
-
-<td>
-${formatMoney(
-item.totalCost
-)} MMK
-</td>
-
-<td>
-${formatMoney(
-item.actualSellingPrice
-)} MMK
-</td>
-
-<td class="${
-item.actualProfit >= 0
-? "profit"
-: "loss"
-}">
-
-${formatMoney(
-item.actualProfit
-)} MMK
-
-</td>
-
-</tr>
-
-`;
-
-})
-.join("");
-
-box.innerHTML = `
+let html = `
 
 <div class="table-wrap">
 
@@ -1840,18 +1853,58 @@ box.innerHTML = `
 <tr>
 
 <th>MODEL</th>
-<th>DATE</th>
+<th>SELL PRICE</th>
 <th>COST</th>
-<th>SELLING PRICE</th>
 <th>PROFIT</th>
+<th>DATE</th>
 
 </tr>
 
 </thead>
 
 <tbody>
+`;
 
-${rows}
+
+sales.forEach(function(item){
+
+const profitClass =
+item.profit >= 0
+? "profit"
+: "loss";
+
+
+html += `
+
+<tr>
+
+<td>
+${escapeHTML(item.model)}
+</td>
+
+<td>
+${formatMoney(item.sellPrice)} MMK
+</td>
+
+<td>
+${formatMoney(item.totalCost)} MMK
+</td>
+
+<td class="${profitClass}">
+${formatMoney(item.profit)} MMK
+</td>
+
+<td>
+${item.date}
+</td>
+
+</tr>
+
+`;
+});
+
+
+html += `
 
 </tbody>
 
@@ -1861,11 +1914,13 @@ ${rows}
 
 `;
 
+container.innerHTML = html;
+
 }
 
 
 /* =========================
-UPDATE DASHBOARD
+DASHBOARD
 ========================= */
 
 function updateDashboard(){
@@ -1879,54 +1934,75 @@ return item.status === "IN STOCK";
 
 
 const sold =
-sales.length;
+inventory.filter(function(item){
+
+return item.status === "SOLD";
+
+}).length;
 
 
-const revenue =
-sales.reduce(function(sum,item){
+let revenue = 0;
 
-return sum +
-Number(
-item.actualSellingPrice || 0
-);
-},0);
+let profit = 0;
 
 
-const totalProfit =
-sales.reduce(function(sum,item){
+sales.forEach(function(item){
 
-return sum +
-Number(
-item.actualProfit || 0
-);
+revenue += Number(item.sellPrice);
 
-},0);
+profit += Number(item.profit);
+
+});
 
 
 document.getElementById(
 "stockCount"
-).innerText =
-stock;
+).innerText = stock;
 
 
 document.getElementById(
 "soldCount"
-).innerText =
-sold;
+).innerText = sold;
 
 
 document.getElementById(
 "revenue"
 ).innerText =
-formatMoney(revenue) +
-" MMK";
+formatMoney(revenue) + " MMK";
 
 
 document.getElementById(
 "profitTotal"
 ).innerText =
-formatMoney(totalProfit) +
-" MMK";
+formatMoney(profit) + " MMK";
+
+}
+
+
+/* =========================
+FORMAT MONEY
+========================= */
+
+function formatMoney(number){
+
+return Math.round(Number(number) || 0)
+.toLocaleString("en-US");
+
+}
+
+
+/* =========================
+ESCAPE HTML
+========================= */
+
+function escapeHTML(value){
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
@@ -1942,19 +2018,24 @@ document.getElementById(
 "bankStatus"
 );
 
+
 const message =
 document.getElementById(
 "kbzMessage"
 );
 
+
 status.innerText =
 "KBZ Online Rate Checking...";
+
 
 status.className =
 "status muted";
 
+
 message.innerText =
 "KBZ official website ကိုစစ်နေပါတယ်...";
+
 
 try{
 
@@ -1967,6 +2048,7 @@ cache:"no-store"
 }
 );
 
+
 if(!response.ok){
 
 throw new Error(
@@ -1975,11 +2057,14 @@ throw new Error(
 
 }
 
+
 const html =
 await response.text();
 
+
 const thbIndex =
 html.indexOf("THB");
+
 
 if(thbIndex === -1){
 
@@ -1988,6 +2073,7 @@ throw new Error(
 );
 
 }
+
 
 const nearby =
 html.substring(
@@ -2001,10 +2087,12 @@ thbIndex + 1500
 )
 );
 
+
 const numbers =
 nearby.match(
 /\d{1,5}(?:,\d{3})?(?:\.\d+)?/g
 );
+
 
 if(
 !numbers ||
@@ -2016,6 +2104,7 @@ throw new Error(
 );
 
 }
+
 
 let values =
 numbers
@@ -2032,6 +2121,7 @@ return n > 0;
 
 });
 
+
 if(values.length < 2){
 
 throw new Error(
@@ -2040,8 +2130,10 @@ throw new Error(
 
 }
 
+
 let buy = 0;
 let sell = 0;
+
 
 for(
 let i=0;
@@ -2054,6 +2146,7 @@ values[i];
 
 const b =
 values[i+1];
+
 
 if(
 a > 50 &&
@@ -2070,6 +2163,7 @@ sell = b;
 
 }
 
+
 if(
 buy <= 0 ||
 sell <= 0
@@ -2081,12 +2175,14 @@ throw new Error(
 
 }
 
+
 bankingRate = {
 
 buy:buy,
 sell:sell
 
 };
+
 
 localStorage.setItem(
 "khit_kbz_rate",
@@ -2095,22 +2191,28 @@ bankingRate
 )
 );
 
+
 updateRateDisplay();
+
 
 status.innerText =
 "KBZ Online";
 
+
 status.className =
 "status online";
 
+
 message.innerText =
 "KBZ THB rate updated successfully.";
+
 
 document.getElementById(
 "rateUpdated"
 ).innerText =
 "Last Updated: " +
 new Date().toLocaleString();
+
 
 }catch(error){
 
@@ -2119,10 +2221,12 @@ console.log(
 error
 );
 
+
 const saved =
 localStorage.getItem(
 "khit_kbz_rate"
 );
+
 
 if(saved){
 
@@ -2201,6 +2305,7 @@ new Date().toISOString()
 
 };
 
+
 const blob =
 new Blob(
 [
@@ -2215,22 +2320,24 @@ type:"application/json"
 }
 );
 
+
 const url =
 URL.createObjectURL(blob);
+
 
 const a =
 document.createElement("a");
 
+
 a.href = url;
+
 
 a.download =
 "khit-motobike-backup.json";
 
-document.body.appendChild(a);
 
 a.click();
 
-document.body.removeChild(a);
 
 URL.revokeObjectURL(url);
 
@@ -2245,7 +2352,7 @@ function clearData(){
 
 if(
 confirm(
-"သိမ်းထားသော Rate, Inventory နှင့် Sales data အားလုံးကို ဖျက်မလား?"
+"သိမ်းထားသော Rate, Inventory, Sales data အားလုံးကို ဖျက်မလား?"
 )
 ){
 
@@ -2317,15 +2424,15 @@ function(){
 
 loadRates();
 
-loadBusinessData();
+loadInventory();
+
+updateRateDisplay();
 
 renderInventory();
 
 renderSales();
 
 updateDashboard();
-
-updateRateDisplay();
 
 modelChanged();
 
